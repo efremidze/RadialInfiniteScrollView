@@ -21,60 +21,22 @@ struct Home: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            VStack(spacing: 30) {
-                Text("Single Row Looping")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
+            GeometryReader {
+                let size = $0.size
                 
-                // First Row (Larger)
-                GeometryReader {
-                    let size = $0.size
-                    
-                    LoopingScrollView(width: 120, spacing: 10, items: items) { item in
-                        Circle()
-                            .fill(item.color.opacity(0.5))
-                            .frame(width: item.size * 0.5, height: item.size * 0.5)
-                            .overlay(
-                                Image(item.image)
-                                    .resizable()
-                                    .clipShape(Circle())
-                            )
-                    }
-                    .contentMargins(.horizontal, 15, for: .scrollContent)
+                LoopingScrollView(width: 120, spacing: 10, items: items) { item in
+                    Circle()
+                        .fill(item.color.opacity(0.5))
+                        .frame(width: item.size * 0.5, height: item.size * 0.5)
+                        .overlay(
+                            Image(item.image)
+                                .resizable()
+                                .clipShape(Circle())
+                        )
                 }
-                .frame(height: 240)
-                                
-                Text("Multi-Row Looping")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                
-                // Multi-Row Looping View
-                GeometryReader {
-                    let size = $0.size
-                    
-                    MultiRowLoopingScrollView(
-                        width: 120,
-                        spacing: 10,
-                        items: items,
-                        rowHeight: 90,
-                        rowSpacing: 0
-                    ) { item in
-                        Circle()
-                            .fill(item.color.opacity(0.5))
-                            .frame(width: item.size * 0.5, height: item.size * 0.5)
-                            .overlay(
-                                Image(item.image)
-                                    .resizable()
-                                    .clipShape(Circle())
-                            )
-                    }
-                    .contentMargins(.horizontal, 15, for: .scrollContent)
-                }
-                .frame(height: 350)
+                .contentMargins(.horizontal, 15, for: .scrollContent)
             }
-            .padding(.vertical, 15)
+            .frame(height: 240)
         }
         .scrollIndicators(.hidden)
     }
