@@ -37,7 +37,7 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                     }
                 }
                 .scrollTargetLayout()
-                .padding(.vertical, 50)
+                .padding(.vertical, curveHeight)
                 .background {
                     ScrollViewHelper(
                         width: width,
@@ -65,12 +65,12 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
             .frame(width: width)
             .visualEffect { content, geometryProxy in
                 content
-                    .offset(y: -150)
+                    .offset(y: -curveHeight * 1.5)
                     .rotationEffect(
                         .init(degrees: cardRotation(geometryProxy)),
                         anchor: .bottom
                     )
-                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
+                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: curveHeight)
             }
     }
     
@@ -148,7 +148,7 @@ struct ScrollViewHelper: UIViewRepresentable {
             
             let minX = scrollView.contentOffset.x
             let mainContentSize = CGFloat(itemsCount) * width
-            let spacingSize = CGFloat(itemsCount) * spacing
+            let spacingSize = CGFloat(itemsCount - 1) * spacing
             
             if minX > (mainContentSize + spacingSize) {
                 scrollView.contentOffset.x -= (mainContentSize + spacingSize)
