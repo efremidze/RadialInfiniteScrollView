@@ -35,6 +35,7 @@ struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View wher
                     ForEach(0..<repeatingCount, id: \.self) { index in
                         let item = Array(items)[index % items.count]
                         content(item)
+                            .frame(width: width)
                             .scrollTransition(.interactive) { content, phase in
                                 content
                                     .offset(y: phase.isIdentity ? 0 : 50)
@@ -42,7 +43,7 @@ struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View wher
                             }
                     }
                 }
-//                .padding(.vertical, 50)
+                .padding(.vertical, 20)
                 .background {
                     ScrollViewHelper(
                         width: width,
