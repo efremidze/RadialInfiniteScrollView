@@ -27,33 +27,13 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                 LazyHStack(spacing: spacing) {
                     // First set of elements
                     ForEach(items) { item in
-                        content(item)
-                            .frame(width: width)
-                            .visualEffect { content, geometryProxy in
-                                content
-                                    .offset(y: -150)
-                                    .rotationEffect(
-                                        .init(degrees: cardRotation(geometryProxy)),
-                                        anchor: .bottom
-                                    )
-                                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
-                            }
+                        contentView(item)
                     }
                     
                     // Repeated elements for infinite scrolling
                     ForEach(0..<repeatingCount, id: \.self) { index in
                         let item = Array(items)[index % items.count]
-                        content(item)
-                            .frame(width: width)
-                            .visualEffect { content, geometryProxy in
-                                content
-                                    .offset(y: -150)
-                                    .rotationEffect(
-                                        .init(degrees: cardRotation(geometryProxy)),
-                                        anchor: .bottom
-                                    )
-                                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
-                            }
+                        contentView(item)
                     }
                 }
                 .scrollTargetLayout()
@@ -78,6 +58,21 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
             }
         }
     }
+
+    @ViewBuilder
+    private func contentView(_ item: Items.Element) -> some View {
+        content(item)
+            .frame(width: width)
+            .visualEffect { content, geometryProxy in
+                content
+                    .offset(y: -150)
+                    .rotationEffect(
+                        .init(degrees: cardRotation(geometryProxy)),
+                        anchor: .bottom
+                    )
+                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
+            }
+    }
     
     /// Card Rotation
     func cardRotation(_ proxy: GeometryProxy) -> CGFloat {
@@ -92,7 +87,7 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
     }
 }
 
-fileprivate struct ScrollViewHelper: UIViewRepresentable {
+struct ScrollViewHelper: UIViewRepresentable {
     var width: CGFloat
     var spacing: CGFloat
     var itemsCount: Int
