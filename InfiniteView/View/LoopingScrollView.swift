@@ -112,6 +112,9 @@ struct ScrollViewHelper: UIViewRepresentable {
                 context.coordinator.defaultDelegate = scrollView.delegate
                 scrollView.delegate = context.coordinator
                 context.coordinator.isAdded = true
+                
+                // Initial call to ensure proper positioning
+                context.coordinator.scrollViewDidScroll(scrollView)
             }
         }
         
