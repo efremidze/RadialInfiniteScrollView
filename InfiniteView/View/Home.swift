@@ -21,7 +21,12 @@ struct Home: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            VStack(spacing: 0) {
+            VStack(spacing: 30) {
+                Text("Single Row Looping")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                
                 // First Row (Larger)
                 GeometryReader {
                     let size = $0.size
@@ -38,16 +43,27 @@ struct Home: View {
                     }
                     .contentMargins(.horizontal, 15, for: .scrollContent)
                 }
-                .frame(height: 180)
+                .frame(height: 240)
+                                
+                Text("Multi-Row Looping")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                 
-                // Second Row (Smaller)
+                // Multi-Row Looping View
                 GeometryReader {
                     let size = $0.size
                     
-                    LoopingScrollView(width: 100, spacing: 8, items: items) { item in
+                    MultiRowLoopingScrollView(
+                        width: 120,
+                        spacing: 10,
+                        items: items,
+                        rowHeight: 90,
+                        rowSpacing: 0
+                    ) { item in
                         Circle()
                             .fill(item.color.opacity(0.5))
-                            .frame(width: item.size * 0.3, height: item.size * 0.3)
+                            .frame(width: item.size * 0.5, height: item.size * 0.5)
                             .overlay(
                                 Image(item.image)
                                     .resizable()
@@ -56,7 +72,7 @@ struct Home: View {
                     }
                     .contentMargins(.horizontal, 15, for: .scrollContent)
                 }
-                .frame(height: 140)
+                .frame(height: 350)
             }
             .padding(.vertical, 15)
         }
