@@ -38,7 +38,8 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                                     )
                                     .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
                             }
-                        
+                    }
+                    
                     // Repeated elements for infinite scrolling
                     ForEach(0..<repeatingCount, id: \.self) { index in
                         let item = Array(items)[index % items.count]
