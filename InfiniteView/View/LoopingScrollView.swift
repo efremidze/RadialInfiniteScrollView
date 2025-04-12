@@ -152,11 +152,6 @@ struct ScrollViewHelper: UIViewRepresentable {
                 scrollView.contentOffset.x += (mainContentSize + spacingSize)
             }
         }
-        
-        /// Usage: Default Delegate
-//        func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-//            defaultDelegate?.scrollViewWillEndDragging?(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
-//        }
     }
 }
 
