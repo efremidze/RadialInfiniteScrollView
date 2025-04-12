@@ -72,7 +72,7 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                     }
                 }
                 .scrollTargetLayout()
-//                .padding(.vertical, curveHeight + 10)
+                .padding(.vertical, 50)
                 .background {
                     ScrollViewHelper(
                         width: width,
@@ -82,6 +82,7 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                     )
                 }
             }
+            .safeAreaPadding(.horizontal, (size.width * 0.5) - (size == .zero ? 0 : 75))
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
             .background {
