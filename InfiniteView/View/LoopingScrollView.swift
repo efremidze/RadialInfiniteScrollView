@@ -80,7 +80,7 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
         let width = proxy.size.width
         
         let progress = minX / width
-        let angleForEachCard: CGFloat = -50
+        let angleForEachCard: CGFloat = 50
         let cappedProgress = progress < 0 ? min(max(progress, -3), 0) : max(min(progress, 3), 0)
         
         return cappedProgress * angleForEachCard
