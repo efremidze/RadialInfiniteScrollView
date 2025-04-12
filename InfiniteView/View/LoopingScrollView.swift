@@ -17,7 +17,7 @@ struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View wher
     var body: some View {
         GeometryReader {
             let size = $0.size
-            /// Saftey Check
+            /// Safety Check
             let repeatingCount = width > 0 ? Int((size.width / width).rounded()) + 1 : 1
             
             ScrollView(.horizontal) {
