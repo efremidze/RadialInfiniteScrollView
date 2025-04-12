@@ -50,12 +50,6 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
             .safeAreaPadding(.horizontal, (size.width * 0.5) - (size == .zero ? 0 : 75))
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
-            .background {
-                Circle()
-                    .fill(.ultraThinMaterial)
-                    .frame(width: size.height, height: size.height)
-                    .offset(y: size.height / 2)
-            }
         }
     }
 
