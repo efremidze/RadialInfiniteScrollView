@@ -8,12 +8,15 @@
 import SwiftUI
 
 /// Custom View
-struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View where Item.Element: Identifiable {
+struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View where Items.Element: Identifiable {
     /// Customization Properties
     var width: CGFloat
     var spacing: CGFloat = 0
-    var items: Item
-    @ViewBuilder var content: (Item.Element) -> Content
+    var items: Items
+    var curveHeight: CGFloat = 100 // Control the height of the curve
+    
+    @ViewBuilder var content: (Items.Element) -> Content
+    
     var body: some View {
         GeometryReader {
             let size = $0.size
@@ -22,28 +25,54 @@ struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View wher
             
             ScrollView(.horizontal) {
                 LazyHStack(spacing: spacing) {
+                    // First set of elements
                     ForEach(items) { item in
                         content(item)
                             .frame(width: width)
-                            .scrollTransition(.interactive) { content, phase in
+                            .visualEffect { content, geometryProxy in
                                 content
-                                    .offset(y: phase.isIdentity ? 0 : 50)
-                                    .opacity(phase.isIdentity ? 1 : 0.5)
+                                    .offset(y: -150)
+                                    .rotationEffect(
+                                        .init(degrees: cardRotation(geometryProxy)),
+                                        anchor: .bottom
+                                    )
+                                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
                             }
+                        
+//                            .scrollTransition { content, phase in
+////                                // Calculate more pronounced curvature
+//                                let progress = phase.value
+//                                
+//                                // Y-offset follows a more pronounced arc pattern
+//                                let yOffset = sin(progress * .pi) * curveHeight
+//                                
+//                                // X-offset creates more of a carousel effect
+//                                let xOffset = (1 - cos(progress * .pi)) * 20
+//                                
+//                                return content
+//                                    .offset(x: xOffset, y: Double(yOffset))
+////                                    .rotationEffect(.degrees(progress * 25))
+//                            }
                     }
                     
+                    // Repeated elements for infinite scrolling
                     ForEach(0..<repeatingCount, id: \.self) { index in
                         let item = Array(items)[index % items.count]
                         content(item)
                             .frame(width: width)
-                            .scrollTransition(.interactive) { content, phase in
+                            .visualEffect { content, geometryProxy in
                                 content
-                                    .offset(y: phase.isIdentity ? 0 : 50)
-                                    .opacity(phase.isIdentity ? 1 : 0.5)
+                                    .offset(y: -150)
+                                    .rotationEffect(
+                                        .init(degrees: cardRotation(geometryProxy)),
+                                        anchor: .bottom
+                                    )
+                                    .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
                             }
                     }
                 }
-                .padding(.vertical, 20)
+                .scrollTargetLayout()
+//                .padding(.vertical, curveHeight + 10)
                 .background {
                     ScrollViewHelper(
                         width: width,
@@ -54,7 +83,26 @@ struct LoopingScrollView<Content: View, Item: RandomAccessCollection>: View wher
                 }
             }
             .scrollIndicators(.hidden)
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
+            .background {
+                Circle()
+                    .fill(.ultraThinMaterial)
+                    .frame(width: size.height, height: size.height)
+                    .offset(y: size.height / 2)
+            }
         }
+    }
+    
+    /// Card Rotation
+    func cardRotation(_ proxy: GeometryProxy) -> CGFloat {
+        let minX = proxy.frame(in: .scrollView(axis: .horizontal)).minX
+        let width = proxy.size.width
+        
+        let progress = minX / width
+        let angleForEachCard: CGFloat = -50
+        let cappedProgress = progress < 0 ? min(max(progress, -3), 0) : max(min(progress, 3), 0)
+        
+        return cappedProgress * angleForEachCard
     }
 }
 
