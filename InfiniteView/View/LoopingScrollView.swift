@@ -39,22 +39,6 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
                                     .offset(x: -geometryProxy.frame(in: .scrollView(axis: .horizontal)).minX, y: 100)
                             }
                         
-//                            .scrollTransition { content, phase in
-////                                // Calculate more pronounced curvature
-//                                let progress = phase.value
-//                                
-//                                // Y-offset follows a more pronounced arc pattern
-//                                let yOffset = sin(progress * .pi) * curveHeight
-//                                
-//                                // X-offset creates more of a carousel effect
-//                                let xOffset = (1 - cos(progress * .pi)) * 20
-//                                
-//                                return content
-//                                    .offset(x: xOffset, y: Double(yOffset))
-////                                    .rotationEffect(.degrees(progress * 25))
-//                            }
-                    }
-                    
                     // Repeated elements for infinite scrolling
                     ForEach(0..<repeatingCount, id: \.self) { index in
                         let item = Array(items)[index % items.count]
