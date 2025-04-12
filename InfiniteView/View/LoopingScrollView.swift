@@ -102,20 +102,17 @@ struct ScrollViewHelper: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIView, context: Context) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
-            if let scrollView = uiView.superview?.superview?.superview as? UIScrollView, !context.coordinator.isAdded {
-                context.coordinator.defaultDelegate = scrollView.delegate
-                scrollView.delegate = context.coordinator
-                context.coordinator.isAdded = true
-                
-                // Initial call to ensure proper positioning
-                context.coordinator.scrollViewDidScroll(scrollView)
-            }
+            guard let scrollView = uiView.superview?.superview?.superview as? UIScrollView, 
+                  !context.coordinator.isAdded else { return }
+            
+            scrollView.delegate = context.coordinator
+            context.coordinator.isAdded = true
+            
+            // Initial call to ensure proper positioning
+            context.coordinator.scrollViewDidScroll(scrollView)
         }
         
-        context.coordinator.width = width
-        context.coordinator.spacing = spacing
-        context.coordinator.itemsCount = itemsCount
-        context.coordinator.repeatingCount = repeatingCount
+        context.coordinator.update(width: width, spacing: spacing, itemsCount: itemsCount, repeatingCount: repeatingCount)
     }
     
     class Coordinator: NSObject, UIScrollViewDelegate {
@@ -123,19 +120,22 @@ struct ScrollViewHelper: UIViewRepresentable {
         var spacing: CGFloat
         var itemsCount: Int
         var repeatingCount: Int
-        
-        /// Optional SwiftUI Default Delegate
-        weak var defaultDelegate: UIScrollViewDelegate?
+        var isAdded: Bool = false
         
         init(width: CGFloat, spacing: CGFloat, itemsCount: Int, repeatingCount: Int) {
             self.width = width
             self.spacing = spacing
             self.itemsCount = itemsCount
             self.repeatingCount = repeatingCount
+            super.init()
         }
         
-        /// Tells us whether the delegate is added or not
-        var isAdded: Bool = false
+        func update(width: CGFloat, spacing: CGFloat, itemsCount: Int, repeatingCount: Int) {
+            self.width = width
+            self.spacing = spacing
+            self.itemsCount = itemsCount
+            self.repeatingCount = repeatingCount
+        }
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             guard itemsCount > 0 else { return }
