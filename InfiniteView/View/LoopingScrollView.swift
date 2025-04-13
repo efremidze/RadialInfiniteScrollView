@@ -71,13 +71,9 @@ struct LoopingScrollView<Content: View, Items: RandomAccessCollection>: View whe
     /// Card Rotation
     func cardRotation(_ proxy: GeometryProxy) -> CGFloat {
         let minX = proxy.frame(in: .scrollView(axis: .horizontal)).minX
-        let width = proxy.size.width
-        
-        let progress = minX / width
-        let angleForEachCard: CGFloat = 50
-        let cappedProgress = progress < 0 ? min(max(progress, -3), 0) : max(min(progress, 3), 0)
-        
-        return cappedProgress * angleForEachCard
+        let progress = minX / proxy.size.width
+        // Cap progress between -3 and 3, then multiply by angle
+        return (progress < 0 ? min(max(progress, -3), 0) : max(min(progress, 3), 0)) * 50
     }
 }
 
